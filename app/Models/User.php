@@ -12,11 +12,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    public function cars()
+    {
+        return $this->hasMany(Car::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
     protected $fillable = [
         'name',
         'email',
