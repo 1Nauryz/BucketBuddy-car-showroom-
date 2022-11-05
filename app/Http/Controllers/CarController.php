@@ -22,11 +22,13 @@ class CarController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Car::class);
         return view('cars.create', ['cars' => Car::all(), 'categories' => Category::all()]);
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', Car::class);
         $validated = $request->validate([
             'model' => 'required|max:50',
             'city' => 'required|max:15',
@@ -67,6 +69,7 @@ class CarController extends Controller
     }
     public function destroy(Car $car)
     {
+        $this->authorize('delete', $car);
         $car->delete();
         return redirect()->route('cars.index')->with('delete', 'Removal was successful!!');
     }

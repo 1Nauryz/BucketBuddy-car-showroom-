@@ -27,6 +27,8 @@ class LoginController extends Controller
             'password'=>'required|string'
         ]);
         if(Auth::attempt($validated)){
+            if(Auth::user()->role->name == "admin" or Auth::user()->role->name == "editor")
+                return redirect()->intended('/adm/users');
             return redirect()->route('cars.index');
         }
         return back()->withErrors('Incorrect email or password');

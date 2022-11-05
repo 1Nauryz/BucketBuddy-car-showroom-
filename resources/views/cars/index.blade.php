@@ -47,7 +47,7 @@
                 <p><a class="btn btn-secondary" href="https://www.discogs.com/ru/artist/14753-Xzibit">View details &raquo;</a></p>
             </div>
             <div class="col-lg-4">
-                <img class="bd-placeholder-img rounded-circle" width="140" height="140" src="/img/me2.jpeg" alt="" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <img class="bd-placeholder-img rounded-circle" width="140" height="140" src="/img/.jpeg" alt="" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
                 <h2>Nauryz</h2>
                 <p>The owner of the project and generally a very strong programmer. Comes up with ideas for a project in 5 minutes</p>
                 <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>

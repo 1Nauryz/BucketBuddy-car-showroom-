@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth2;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class RegisterController extends Controller
         return view('auth.register');
     }
     public function register(Request $request){
-        $validated=$request->validate([
+        $request->validate([
             'name'=>'required|string|max:255',
             'email'=>'required|email|max:255|unique:users',
             'password'=>'required|min:6|confirmed',
@@ -25,9 +26,10 @@ class RegisterController extends Controller
             'name'=>$request->input('name'),
             'email'=>$request->input('email'),
             'password'=>Hash::make($request->input('password')),
+            'role_id' => Role::where('name', 'user')->first()->id
         ]);
         Auth::login($user);
-        return redirect()->route('cars  .index');
+        return redirect()->route('cars.index');
     }
 
 }

@@ -7,12 +7,14 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>BucketBuddy</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Bucket Buddy</title>
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="website icon" href="/img/bb_logo.jpg " type="jpg">
+
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
         .fa-1x {
             font-size: 1.5rem;
@@ -49,8 +51,6 @@
             }
         }
     </style>
-    <!-- Scripts -->
-    <script type="module" src="http://localhost:3000/@@vite/client"></script>
 </head>
 <body>
     <div id="app">
@@ -61,62 +61,65 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+                <!-- Left Side Of Navbar -->
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{route('cars.index')}}">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{route('cars.index')}}">Home <span class="sr-only"></span></a>
                     </li>
                     @isset($categories)
-                    @foreach($categories as $cat)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('cars.category',$cat->id)}}">{{$cat->name}} <span class="sr-only">    </span></a>
-                        </li>
-                    @endforeach
+                        @foreach($categories as $cat)
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{route('cars.category',$cat->id)}}">{{$cat->name}} <span class="sr-only">    </span></a>
+                            </li>
+                        @endforeach
                     @endisset
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav me-auto">
 
-                        </ul>
+                </ul>
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav ms-auto">
+                    <!-- Authentication Links -->
+                    @guest
+                        @if (Route::has('login.form'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login.form') }}">{{ __('Login') }}</a>
+                            </li>
+                        @endif
 
-                        <!-- Right Side Of Navbar -->
-                        <ul class="navbar-nav ms-auto">
-                            <!-- Authentication Links -->
-                            @guest
-                                @if (Route::has('login.form'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('login.form') }}">{{ __('Login') }}</a>
-                                    </li>
-                                @endif
-
-                                @if (Route::has('register.form'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register.form') }}">{{ __('Register') }}</a>
-                                    </li>
-                                @endif
-                            @else
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->name }}
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                           onclick="event.preventDefault();
+                        @if (Route::has('register.form'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register.form') }}">{{ __('Register') }}</a>
+                            </li>
+                        @endif
+                    @else
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
+                                    {{ __('Logout') }}
+                                </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="post" class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-                            @endguest
-                        </ul>
-                    </div>
+                                <form id="logout-form" action="{{ route('logout') }}" method="post" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                    @endguest
+
                 </ul>
             </div>
-            <div><a href="{{route('cars.create')}}">Add your car</a></div>
+            @can('create', \App\Models\Car::class)
+                <div><a href="{{route('cars.create')}}">Add your car</a></div>
+            @endcan
+
         </nav>
+    </div>
+
+
+
 
         @if (session('delete'))
             <div class="alert alert-danger" role="alert">{{session('delete')}}</div>
