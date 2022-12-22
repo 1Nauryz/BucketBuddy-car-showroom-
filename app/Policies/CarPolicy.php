@@ -12,17 +12,16 @@ class CarPolicy
 
     public function viewAny(User $user)
     {
-        //
+        return $user->role->name == 'admin' or $user->role->name =='editor';
     }
 
     public function view(User $user, Car $car)
     {
-        //
     }
 
     public function create(User $user)
     {
-        return $user->role->name =='user' or $user->role->name =='editor';
+        return $user->role->name =='user' or $user->role->name =='editor' or $user->role->name =='admin';
     }
 
     public function update(User $user, Car $car)

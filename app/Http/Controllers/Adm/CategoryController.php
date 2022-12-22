@@ -27,7 +27,11 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:50',
             'code' => 'required|max:15',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|'
         ]);
+        $fileName = time().$request->file('image')->getClientOriginalName();
+        $image_path = $request->file('image')->storeAs('categories', $fileName, 'public');
+        $validated['image'] = '/storage/'.$image_path;
         Category::create($validated);
         return redirect()->route('adm.categories.index', ['categories' => Category::all()] )->with('success', 'You added your car!!');
     }

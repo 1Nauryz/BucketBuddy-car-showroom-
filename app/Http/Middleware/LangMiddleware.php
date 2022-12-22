@@ -16,7 +16,8 @@ class LangMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->session()->has('mylocale') && array_key_exists($request->session()->get('mylocale'), config('app.languages')))
+        if ($request->session()->has('mylocale') &&
+            array_key_exists($request->session()->get('mylocale'), config('app.languages')))
         {
             app()->setLocale($request->session()->get('mylocale'));
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Adm;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,6 +26,17 @@ class UserController extends Controller
             $users = User::with('role')->get();
         }
         return view('adm.users', ['users' => $users]);
+    }
+    public function indexCom(Request $request)
+    {
+
+        return view('adm.comments', ['comments' => Comment::all()]);
+    }
+
+    public function destroyCom(Comment $comment)
+    {
+        $comment->delete();
+        return back();
     }
     public function ban(User $user)
     {

@@ -22,7 +22,7 @@ class CommentPolicy
 
     public function create(User $user)
     {
-        return $user->role->name =='user' or $user->role->name =='editor';
+        return $user->role->name =='user' or $user->role->name =='editor' or $user->role->name =='admin';
     }
 
     public function update(User $user, Comment $comment)

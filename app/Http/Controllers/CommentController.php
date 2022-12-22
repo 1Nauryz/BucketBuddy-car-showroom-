@@ -18,7 +18,7 @@ class CommentController extends Controller
 
         ]);
         Auth::user()->comments()->create($validated);
-        return back()->with('success', 'Comment is added');
+        return back()->with('successCom', 'Comment is added');
     }
     public function destroy(Comment $comment)
     {

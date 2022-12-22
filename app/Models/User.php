@@ -51,6 +51,7 @@ class User extends Authenticatable
         'password',
         'role_id',
         'is_active',
+        'balance',
     ];
 
     protected $hidden = [

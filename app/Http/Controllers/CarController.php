@@ -19,14 +19,31 @@ class CarController extends Controller
     public function favorites(Car $car)
     {
         $favorite_car = Auth::user()->carsFavorites()->where('car_id', $car->id)->first();
-
         if ($favorite_car != null)
         {
             Auth::user()->carsFavorites()->detach($car->id);
+            return back()->with('delFavAdd', 'You deleted car from favorites!');
         }
-        else
+        else {
             Auth::user()->carsFavorites()->attach($car->id);
+            return back()->with('favAdd', 'You added car to favorites!');
+        }
+    }
 
+
+
+    public function unrate(Car $car)
+    {
+        $carsRated = Auth::user()->carsRated()->where('car_id', $car->id)->first();
+        if ($carsRated != null)
+            Auth::user()->carsRated()->detach($car->id);
+        return back();
+    }
+    public function dMessage(Car $car)
+    {
+        $messageUser = Auth::user()->messageUser()->where('car_id', $car->id)->first();
+        if ($messageUser != null)
+            Auth::user()->messageUser()->detach($car->id);
         return back();
     }
 
@@ -37,24 +54,42 @@ class CarController extends Controller
         ]);
 
         $carsRated = Auth::user()->carsRated()->where('car_id', $car->id)->first();
-
         if ($carsRated != null)
             Auth::user()->carsRated()->updateExistingPivot($car->id, ['rating' => $request->input('rating')]);
-
         else
             Auth::user()->carsRated()->attach($car->id, ['rating' => $request->input('rating')]);
         return back();
     }
 
-    public function unrate(Car $car)
+    public function message(Request $request, Car $car)
     {
-        $carsRated = Auth::user()->carsRated()->where('car_id', $car->id)->first();
-        if ($carsRated != null)
-            Auth::user()->carsRated()->detach($car->id);
+        $request->validate([
+            'message' => 'required'
+        ]);
+        Auth::user()->messageUser()->attach($car->id,['message' => $request->input('message')]);
+        return back();
+//        $request->validate([
+//            'message' => 'required'
+//        ]);
+//        $scar = Auth::user()->messageUser()->where('car_id', $car->id)->first();
+//
+//        if ($scar != null)
+//            Auth::user()->messageUser()->updateExistingPivot($car->id, ['message' => $request->input('message')]);
+//        else
+//            Auth::user()->messageUser()->attach($car->id,['message' => $request->input('message')]);
+////        Auth::user()->messageUser()->attach($car->id,['message' => $request->input('message')]);
+//        return back();
+    }
+    public function updateMes(Car $car, Request $request)
+    {
+        $request->validate([
+            'message' => 'required'
+        ]);
+        Auth::user()->messageUser()->updateExistingPivot($car->id, ['message' => $request->input('message')]);
         return back();
     }
 
-    public function message(Request $request, Car $car)
+    public function storeMes(Request $request, Car $car)
     {
         $request->validate([
             'message' => 'required'
@@ -65,22 +100,15 @@ class CarController extends Controller
             Auth::user()->messageUser()->updateExistingPivot($car->id, ['message' => $request->input('message')]);
         else
             Auth::user()->messageUser()->attach($car->id,['message' => $request->input('message')]);
+//        Auth::user()->messageUser()->attach($car->id,['message' => $request->input('message')]);
         return back();
     }
 
-    public function dmessage(Car $car)
-    {
-        $delmes = Auth::user()->messageUser()->where('car_id', $car->id)->first();
-        if ($delmes != null)
-            Auth::user()->messageUser()->detach($car->id);
-        return back();
-    }
 
     public function showMessage(Car $car)
     {
         $scar = $car->messageToCar()->get();
-
-        return view('cars.message', ['cars' => $scar , 'car' => $car]);
+        return view('cars.message', ['cars' => $scar , 'car' => $car, 'users' => User::all()]);
     }
 
     public function index(Car $car)
@@ -131,6 +159,34 @@ class CarController extends Controller
         return redirect()->route('cars.index', ['categories' => Category::all()] )->with('success', 'You added your car!!');
     }
 
+    public function upBalance()
+    {
+       return view('cars.balance');
+    }
+
+    public function balanceStore(Request $request)
+    {
+        Auth::user()->update([
+                'balance' => Auth::user()->balance + $request->input('balance'), 'required|numeric',
+        ]);
+        return redirect()->route('cars.index')->with('balanceup', 'You have successfully replenished the balance!!');
+    }
+
+    public function buyCar(Car $car)
+    {
+        if (Auth::user()->balance >= $car->price) {
+            Auth::user()->update([
+                'balance' => Auth::user()->balance - $car->price, 'required|numeric',
+            ]);
+            $car->delete();
+            return redirect()->route('cars.index')->with('buy', 'Congratulations on your purchase!!');
+        }
+        else
+        {
+            return redirect()->route('cars.index')->with('fail', 'Your balance is missing!!');
+        }
+    }
+
     public function show(Car $car)
     {
         $myRating = 0;
@@ -167,11 +223,15 @@ class CarController extends Controller
             'transmission' => 'required|max:20',
             'price' => 'required|max:20',
             'phone' => 'required|max:20',
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'category_id' => 'required|numeric|exists:categories,id',
         ]);
+        $fileName = time().$request->file('image')->getClientOriginalName();
+        $image_path = $request->file('image')->storeAs('cars', $fileName, 'public');
+        $validated['image'] = '/storage/'.$image_path;
+
         $car->update($validated);
-        return redirect()->route('cars.index')->with('success', 'The change was successful!!');
+        return redirect()->route('cars.index')->with('successedit', 'The change was successful!!');
 
     }
     public function destroy(Car $car)

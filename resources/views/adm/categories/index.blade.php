@@ -6,9 +6,11 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
+            <th scope="col"></th>
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">CODE</th>
+            <th scope="col">Image</th>
             <th>Edit Category</th>
         </tr>
         </thead>
@@ -18,6 +20,7 @@
                 <th scope="row">{{$cat->id}}</th>
                 <td>{{$cat->name}}</td>
                 <td>{{$cat->code}}</td>
+                <td><img src="{{asset($cat->image)}}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="50" height="50" loading="lazy"></td>
                 <td>
                 <form action="{{route('adm.categories.destroy', $cat->id)}}" method="post">
                     @csrf

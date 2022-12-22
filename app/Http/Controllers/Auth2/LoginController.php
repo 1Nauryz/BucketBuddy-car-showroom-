@@ -31,6 +31,14 @@ class LoginController extends Controller
                 return redirect()->intended('/adm/users');
             return redirect()->route('cars.index');
         }
-        return back()->withErrors('Incorrect email or password');
+        if(app()->getLocale() == 'en') {
+            return back()->withErrors('Incorrect email or password');
+        }
+        if(app()->getLocale() == 'ru') {
+            return back()->withErrors('Неправильный адрес электронной почты или пароль');
+        }
+        if(app()->getLocale() == 'kz') {
+            return back()->withErrors('Қате электрондық пошта немесе құпия сөз');
+        }
     }
 }

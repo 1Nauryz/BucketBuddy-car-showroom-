@@ -10,20 +10,48 @@
                     <img src="{{$car->image}}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
                 </div>
                 <div class="col-lg-6">
-                    <h1 class="display-5 fw-bold lh-1 mb-3">{{$car->model}}</h1>
-                    <p class="lead">City: {{$car->city}} <br>
-                        Engine volume: {{$car->volume}} <br>
-                        Mileage: {{$car->mileage}} <br>
-                        Transmission: {{$car->transmission}} <br>
-                        Price: {{$car->price}} <br>
-                        Phone number: {{$car->phone}} <br>
-                    </p>
-                    <div>Author: {{$car->user->name}}</div>
+                    @if(app()->getLocale() == 'en')
+                        <h1 class="display-5 fw-bold lh-1 mb-3">{{$car->model}}</h1>
+                        <p class="lead">City: {{$car->city}} <br>
+                            Engine volume: {{$car->volume}} <br>
+                            Mileage: {{$car->mileage}} <br>
+                            Transmission: {{$car->transmission}} <br>
+                            Price: {{$car->price}} <br>
+                            Phone number: {{$car->phone}} <br>
+                        </p>
+                        <div>Author: {{$car->user->name}}</div>
+                    @elseif(app()->getLocale() == 'kz')
+                        <h1 class="display-5 fw-bold lh-1 mb-3">{{$car->model}}</h1>
+                        <p class="lead">Қала: {{$car->city}} <br>
+                            Қозғалтқыш көлемі: {{$car->volume}} <br>
+                            Жүгіріс: {{$car->mileage}} <br>
+                            Трансмиссиясы: {{$car->transmission}} <br>
+                            Бағасы: {{$car->price}} <br>
+                            Телефон нөмер: {{$car->phone}} <br>
+                        </p>
+                        <div>Автор: {{$car->user->name}}</div>
+                    @elseif(app()->getLocale() == 'ru')
+                        <h1 class="display-5 fw-bold lh-1 mb-3">{{$car->model}}</h1>
+                        <p class="lead">Город: {{$car->city}} <br>
+                            Обьем двигателя: {{$car->volume}} <br>
+                            Пробег: {{$car->mileage}} <br>
+                            Трансмиссия: {{$car->transmission}} <br>
+                            Цена: {{$car->price}} <br>
+                            Номер телефона: {{$car->phone}} <br>
+                        </p>
+                        <div>Автор: {{$car->user->name}}</div>
+                    @endif
                     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                         <form action="{{route('cars.favorites', $car->id)}}" method="post">
                             @csrf
                                 <button type="submit" class="btn btn-outline-secondary btn-lg px-4">
-    Delete from favorites
+                                    @if(app()->getLocale() == 'en')
+                                        Delete from favorites
+                                    @elseif(app()->getLocale() == 'kz')
+                                        Таңдаулылардан жою
+                                    @elseif(app()->getLocale() == 'ru')
+                                        Удалить из избранного
+                                    @endif
                                 </button>
                         </form>
                     </div>
